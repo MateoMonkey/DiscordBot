@@ -12,7 +12,7 @@ A Discord bot that pings a specific role every **Saturday and Sunday at 9PM (Par
 - Includes a Google Sheet planning link
 - Automatically reacts to its own message with ✅
 - Deletes the message 23h59 after posting
-- Includes a `!test` command to verify the bot is alive
+- Includes a `!test` command to verify the bot is alive and `!credits` for credits.
 
 ---
 
