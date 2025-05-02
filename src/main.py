@@ -1,3 +1,23 @@
+"""
+Discord Planning Bot
+---------------------
+
+This bot sends a planning reminder every Saturday and Sunday at 21:00 (Paris time) and deletes the message exactly 23h59 later. It also reacts with a ✅ to help track planning completion.
+
+Author: monkey_26 🐒
+Version: 1.0
+License: MIT
+
+Dependencies:
+- discord.py
+- APScheduler
+- python-dotenv
+
+Usage:
+- Run as a background worker (e.g. on Render)
+- Configure via .env file (DISCORD_TOKEN, CHANNEL_ID)
+"""
+
 import os
 import discord
 import asyncio
@@ -28,23 +48,26 @@ scheduler = AsyncIOScheduler()
 
 @bot.event
 async def on_ready():
+    """
+    Schedule the bot message
+    """
     print(f"Connecté en tant que {bot.user}")
     try:
-        scheduler.add_job(
-            send_ping,
-            CronTrigger(minute="*/1", timezone="Europe/Paris"))
-        scheduler.start()
-        # scheduler.add_job(send_ping, CronTrigger(day_of_week='sat,sun', hour=21, minute=0, timezone="Europe/Paris"))
+        scheduler.add_job(send_ping, CronTrigger(day_of_week='sat,sun', hour=21, minute=0, timezone="Europe/Paris"))
     except Exception as e:
         print(f"Error setting up scheduler: {e}")
 
 async def send_ping():
+    """
+    Sends a ping message with the planning link to a specific role,
+    reacts with a ✅, and deletes the message 23h59 later.
+    """
     try:
         channel = bot.get_channel(int(CHANNEL_ID))
         if isinstance(channel, discord.TextChannel):
             message = await channel.send(f"🔔 <@&{ROLE_ID_XERO}>\n Merci de mettre à jour votre planning : {URL_PLANNING}\n ✅ = Planning mis à jour")
             await message.add_reaction("✅")  # Replace ROLE_ID with your actual role ID
-            await asyncio.sleep(10)  # Attendre 23h59 après avoir envoyé le message 86340
+            await asyncio.sleep(86340)  # Attendre 23h59 après avoir envoyé le message
             await message.delete()   # Supprimer le message
         else:
             print(f"Channel with ID {CHANNEL_ID} is not a text channel")
@@ -53,7 +76,18 @@ async def send_ping():
 
 @bot.command()
 async def test(ctx):
+    """
+    Responds with a confirmation that the bot is active.
+    """
     await ctx.send("Bot actif ! ✅")
+
+async def credits(ctx):
+    """
+    Responds with credits and deletes the message 1min later.
+    """
+    await ctx.send("Bot crée par Monkey_26 🐒")
+    await asyncio.sleep(60)
+    await message.delete()
 
 # Start bot
 bot.run(TOKEN)
