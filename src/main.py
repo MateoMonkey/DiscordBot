@@ -27,13 +27,13 @@ from apscheduler.triggers.cron import CronTrigger
 from dotenv import load_dotenv
 
 # Parameters
-ROLE_ID_XERO = 1274719485672034475
-URL_PLANNING = "https://docs.google.com/spreadsheets/d/10eZ3HxMNKAkCs0WNtHlC5ZaLAmRYVRn88_Hc7dRwb6M/edit?gid=2125886037#gid=2125886037"
+ROLE_ID_XERO = 1274719485672034475 # Replace ROLE_ID with your actual role ID
 
 # Load environment variables
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 CHANNEL_ID = os.getenv("CHANNEL_ID")
+URL_PLANNING = os.getenv("URL_PLANNING")
 
 if not TOKEN or not CHANNEL_ID:
     raise ValueError("Please set DISCORD_TOKEN and CHANNEL_ID in .env file")
@@ -66,9 +66,9 @@ async def send_ping():
         channel = bot.get_channel(int(CHANNEL_ID))
         if isinstance(channel, discord.TextChannel):
             message = await channel.send(f"🔔 <@&{ROLE_ID_XERO}>\n Merci de mettre à jour votre planning : {URL_PLANNING}\n ✅ = Planning mis à jour")
-            await message.add_reaction("✅")  # Replace ROLE_ID with your actual role ID
-            await asyncio.sleep(86340)  # Attendre 23h59 après avoir envoyé le message
-            await message.delete()   # Supprimer le message
+            await message.add_reaction("✅") 
+            await asyncio.sleep(86340)  # Wait 23h59 before the message is deleted.
+            await message.delete()   # Delete the message.
         else:
             print(f"Channel with ID {CHANNEL_ID} is not a text channel")
     except Exception as e:
@@ -79,7 +79,8 @@ async def test(ctx):
     """
     Responds with a confirmation that the bot is active.
     """
-    message = await ctx.send("Bot actif ! ✅")
+    await ctx.message.delete()  # Delete the user command.
+    message = await ctx.send(f"Bot actif ! ✅ {URL_PLANNING}")
     await asyncio.sleep(10)
     await message.delete()
 
@@ -88,6 +89,7 @@ async def credits(ctx):
     """
     Responds with credits and deletes the message 1min later.
     """
+    await ctx.message.delete()  # Delete the user command.
     message = await ctx.send("Bot crée par Monkey_26 🐒")
     await asyncio.sleep(60)
     await message.delete()
