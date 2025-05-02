@@ -79,13 +79,16 @@ async def test(ctx):
     """
     Responds with a confirmation that the bot is active.
     """
-    await ctx.send("Bot actif ! ✅")
+    message = await ctx.send("Bot actif ! ✅")
+    await asyncio.sleep(10)
+    await message.delete()
 
+@bot.command()
 async def credits(ctx):
     """
     Responds with credits and deletes the message 1min later.
     """
-    await ctx.send("Bot crée par Monkey_26 🐒")
+    message = await ctx.send("Bot crée par Monkey_26 🐒")
     await asyncio.sleep(60)
     await message.delete()
 
