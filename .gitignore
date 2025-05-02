@@ -1,0 +1,5 @@
+# Ne pas versionner les fichiers sensibles ou inutiles
+.env
+__pycache__/
+*.pyc
+*.log
