@@ -30,7 +30,7 @@ A Discord bot that pings a specific role every **Saturday at 8PM (Paris time)** 
 5. **Stop and delete** the docker image
     - `sudo docker stop discord-bot`
     - `sudo docker rm discord-bot`
-    - `sudo docker rmi discordbot-bot:latest`
+    - `docker rmi mateomonkey/discord_bot:latest python:3.12-slim`
 
 ---
 

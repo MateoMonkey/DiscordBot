@@ -22,6 +22,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy every files from project
 COPY . .
 
+# Install procps for HEALTHCHECK (contains pgrep)
+RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
+
 # Change user
 RUN chown -R appuser:appuser /src
 
@@ -40,7 +43,7 @@ HEALTHCHECK --interval=60s \
             --timeout=1s \
             --start-period=60s \
             --retries=3 \
-            CMD pgrep -f main.py || exit 1
+            CMD pgrep -f "main.py" || exit 1
 
 # Run the bot
 CMD [ "python", "main.py"]
