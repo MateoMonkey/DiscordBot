@@ -1,6 +1,6 @@
 # 🗓️ Discord Planning Bot
 
-A Discord bot that pings a specific role every **Saturday and Sunday at 9PM (Paris time)** with a planning link, and deletes the message exactly **23h59 later**. Built with `discord.py`, scheduled with `APScheduler`.
+A Discord bot that pings a specific role every **Saturday at 8PM (Paris time)** with a planning link, and deletes the message exactly **27h later**. Built with `discord.py`, scheduled with `APScheduler`.
 
 > Made by **monkey_26** 🐒
 
@@ -8,26 +8,41 @@ A Discord bot that pings a specific role every **Saturday and Sunday at 9PM (Par
 
 ## 📌 Features
 
-- Sends a ping to a specific role every weekend at 21:00
+- Sends a ping to a specific role every saturday at 20:00
 - Includes a Google Sheet planning link
 - Automatically reacts to its own message with ✅
-- Deletes the message 23h59 after posting
-- Includes a `!test` command to verify the bot is alive and `!credits` for credits.
+- Deletes the message 27h after posting
+- Includes a `!test` command to verify the bot is alive, `!credits` for credits and `!planning` for the Google doc planning URL.
 
 ---
 
-## 🚀 Deploy with Render (as Background Worker)
+## 🚀 Deploy with Docker
 
 1. Push your code to GitHub
-2. Go to [Render.com](https://render.com)
-3. Create a **new Web Service**:
-   - Type: **Background Worker**
-   - Environment: **Python 3**
-   - Build Command: `pip install -r src/requirements.txt`
-   - Start Command: `python src/main.py`
-4. In **Environment > Secret Files** or **Environment Variables**, add:
-    - DISCORD_TOKEN=your-bot-token
-    - CHANNEL_ID=your-text-channel-id
+2. Log on your sever (ssh)
+3. **Create** a docker image
+    - `sudo docker compose build`
+    - `sudo docker run -d --name discord-bot discordbot-bot`
+4. **Check** the docker image
+    - `sudo docker ps -a`
+    - `sudo docker image ls`
+5. **Stop and delete** the docker image
+    - `sudo docker stop discord-bot`
+    - `sudo docker rm discord-bot`
+    - `sudo docker rmi discordbot-bot:latest`
+
+---
+
+## 🛡️ CI / Security Scan
+
+A GitHub Actions pipeline is configured to:
+
+- ✅ Automatically scan for vulnerabilities in:
+  - The Docker image (`src/Dockerfile`)
+- 🕵️ Run every **push**, every **PR**, and **weekly** on Sundays at midnight
+
+You can find this in:  
+`.github/workflows/security-scan.yml`
 
 ---
 
@@ -38,8 +53,13 @@ A Discord bot that pings a specific role every **Saturday and Sunday at 9PM (Par
 ├── src/
 │   ├── main.py             # Bot code
 │   ├── .env                # Environment variables (not pushed)
+│   ├── Dockerfile          # Dockerfile
 │   └── requirements.txt    # Python dependencies
+├── docker-compose.yml      # Docker compose
 ├── .gitignore              # Prevents pushing sensitive files (like .env)
+├── .github/
+│   └── workflows/
+│       └── security-scan.yml # GitHub Actions pipeline (build + Trivy scan)
 └── README.md               # Project documentation
 ```
 
@@ -47,8 +67,10 @@ A Discord bot that pings a specific role every **Saturday and Sunday at 9PM (Par
 
 ## 🔐 .env file example (in src/.env)
 
-- DISCORD_TOKEN=your_discord_token_here
-- CHANNEL_ID=your_text_channel_id
+```env
+DISCORD_TOKEN=your_discord_token_here
+CHANNEL_ID=your_text_channel_id
+```
 
 Make sure `.env` is listed in `.gitignore` and **never push it** to GitHub.
 

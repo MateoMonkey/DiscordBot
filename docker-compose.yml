@@ -1,0 +1,13 @@
+version: "3"
+services:
+    bot:
+        build: ./src
+        env_file: ./src/.env
+        container_name: discord-bot
+        ports:
+            - "25921:25921"
+        networks:
+            - src_net
+networks:
+    src_net:
+        driver: bridge

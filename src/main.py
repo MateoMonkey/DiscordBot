@@ -2,7 +2,7 @@
 Discord Planning Bot
 ---------------------
 
-This bot sends a planning reminder every Saturday and Sunday at 21:00 (Paris time) and deletes the message exactly 23h59 later. It also reacts with a ✅ to help track planning completion.
+This bot sends a planning reminder every Saturday at 20:00 (Paris time) and deletes the message exactly 27 later. It also reacts with a ✅ to help track planning completion.
 
 Author: monkey_26 🐒
 Version: 1.0
@@ -53,45 +53,58 @@ async def on_ready():
     """
     print(f"Connecté en tant que {bot.user}")
     try:
-        scheduler.add_job(send_ping, CronTrigger(day_of_week='sat,sun', hour=21, minute=0, timezone="Europe/Paris"))
+        scheduler.add_job(send_ping, CronTrigger(day_of_week='sat', hour=20, minute=0, timezone="Europe/Paris"))
     except Exception as e:
         print(f"Error setting up scheduler: {e}")
 
 async def send_ping():
     """
     Sends a ping message with the planning link to a specific role,
-    reacts with a ✅, and deletes the message 23h59 later.
+    reacts with a ✅, and deletes the message 27h later.
     """
     try:
         channel = bot.get_channel(int(CHANNEL_ID))
         if isinstance(channel, discord.TextChannel):
-            message = await channel.send(f"🔔 <@&{ROLE_ID_XERO}>\n Merci de mettre à jour votre planning : {URL_PLANNING}\n ✅ = Planning mis à jour")
+            message = await channel.send(f"🔔 Bonsoir <@&{ROLE_ID_XERO}>, pensez à remplir vos disponibilités de la semaine prochaine s'il vous plait !\n {URL_PLANNING}\n ✅ = Planning mis à jour")
             await message.add_reaction("✅") 
-            await asyncio.sleep(86340)  # Wait 23h59 before the message is deleted.
+            await asyncio.sleep(97200)  # Wait 27h before the message is deleted.
             await message.delete()   # Delete the message.
         else:
             print(f"Channel with ID {CHANNEL_ID} is not a text channel")
     except Exception as e:
         print(f"Error sending ping: {e}")
 
+# Command for a test
 @bot.command()
 async def test(ctx):
     """
     Responds with a confirmation that the bot is active.
     """
     await ctx.message.delete()  # Delete the user command.
-    message = await ctx.send(f"Bot actif ! ✅ {URL_PLANNING}")
+    message = await ctx.send("Bot actif ! ✅")
     await asyncio.sleep(10)
     await message.delete()
 
+# Command for credits
 @bot.command()
 async def credits(ctx):
     """
-    Responds with credits and deletes the message 1min later.
+    Responds with credits and deletes the message 25sec later.
     """
     await ctx.message.delete()  # Delete the user command.
     message = await ctx.send("Bot crée par Monkey_26 🐒")
-    await asyncio.sleep(60)
+    await asyncio.sleep(25)
+    await message.delete()
+
+# Command for planning URL
+@bot.command()
+async def planning(ctx):
+    """
+    Responds with URL
+    """
+    await ctx.message.delete() # Delete the user command.
+    message = await ctx.send(f"Voici l'URL : {URL_PLANNING}")
+    await asyncio.sleep(30)
     await message.delete()
 
 # Start bot
