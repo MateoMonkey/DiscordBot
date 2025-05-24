@@ -1,0 +1,29 @@
+name: Security Scan
+
+on:
+  push:
+  schedule:
+    - cron: '0 0 * * 0' # Tous les dimanches à minuit
+
+jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: docker build -t discord-bot ./src
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: discord-bot
+          severity: HIGH,CRITICAL
+          exit-code: 1
+          format: table
+          ignore-unfixed: true
