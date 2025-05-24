@@ -54,6 +54,7 @@ async def on_ready():
     print(f"Connecté en tant que {bot.user}")
     try:
         scheduler.add_job(send_ping, CronTrigger(day_of_week='sat', hour=20, minute=0, timezone="Europe/Paris"))
+        scheduler.start()
     except Exception as e:
         print(f"Error setting up scheduler: {e}")
 
