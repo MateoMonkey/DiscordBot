@@ -12,7 +12,7 @@ A Discord bot that pings a specific role every **Saturday at 8PM (Paris time)** 
 - Includes a Google Sheet planning link
 - Automatically reacts to its own message with ✅
 - Deletes the message 27h after posting
-- Includes a `!test` command to verify the bot is alive, `!credits` for credits and `!planning` for the Google doc planning URL.
+- Includes a `/test` command to verify the bot is alive, `/credits` for credits and `/planning` for the Google doc planning URL.
 
 ---
 
@@ -84,7 +84,7 @@ pip install -r src/requirements.txt
 python src/main.py
 ```
 
-Use `!test` in Discord to see if the bot is running correctly.
+Use `/test` in Discord to see if the bot is running correctly.
 
 ---
 

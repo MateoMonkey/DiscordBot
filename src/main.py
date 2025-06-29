@@ -57,6 +57,8 @@ async def on_ready():
             scheduler.remove_all_jobs()
             scheduler.add_job(send_ping, CronTrigger(day_of_week='sat', hour=20, minute=0, timezone="Europe/Paris")),id=="weekly_ping"
             scheduler.start()
+            await bot.tree.sync()
+            print("Commandes slash synchronisées.")
         except Exception as e:
             print(f"Error setting up scheduler: {e}")
     else:
@@ -80,37 +82,28 @@ async def send_ping():
         print(f"Error sending ping: {e}")
 
 # Command for a test
-@bot.command()
-async def test(ctx):
-    """
-    Responds with a confirmation that the bot is active.
-    """
-    await ctx.message.delete()  # Delete the user command.
-    message = await ctx.send("Bot actif ! ✅")
-    await asyncio.sleep(10)
-    await message.delete()
+"""
+Responds with a confirmation that the bot is active.
+"""
+@bot.tree.command(name="test", description="Vérifie si le bot est actif")
+async def slash_test(interaction: discord.Interaction):
+    await interaction.response.send_message("Bot actif ! ✅", ephemeral=True)
 
 # Command for credits
-@bot.command()
-async def credits(ctx):
-    """
-    Responds with credits and deletes the message 25sec later.
-    """
-    await ctx.message.delete()  # Delete the user command.
-    message = await ctx.send("Bot crée par Monkey_26 🐒")
-    await asyncio.sleep(25)
-    await message.delete()
+"""
+Responds with credits.
+"""
+@bot.tree.command(name="credits", description="Affiche les crédits du bot")
+async def slash_credits(interaction: discord.Interaction):
+    await interaction.response.send_message("Bot créé par Monkey_26 🐒", ephemeral=True)
 
 # Command for planning URL
-@bot.command()
-async def planning(ctx):
-    """
-    Responds with URL
-    """
-    await ctx.message.delete() # Delete the user command.
-    message = await ctx.send(f"Voici l'URL : {URL_PLANNING}")
-    await asyncio.sleep(30)
-    await message.delete()
+"""
+Responds with URL
+"""
+@bot.tree.command(name="planning", description="Affiche le lien vers le planning")
+async def slash_planning(interaction: discord.Interaction):
+    await interaction.response.send_message(f"Voici l'URL : {URL_PLANNING}", ephemeral=True)
 
 # Start bot
 bot.run(TOKEN)
