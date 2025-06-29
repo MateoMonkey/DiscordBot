@@ -27,7 +27,7 @@ from apscheduler.triggers.cron import CronTrigger
 from dotenv import load_dotenv
 
 # Parameters
-ROLE_ID_XERO = 1274719485672034475 # Replace ROLE_ID with your actual role ID
+ROLE_ID_XERO = 1378817361800462402 # Replace ROLE_ID with your actual role ID
 
 # Load environment variables
 load_dotenv()
@@ -52,11 +52,15 @@ async def on_ready():
     Schedule the bot message
     """
     print(f"Connecté en tant que {bot.user}")
-    try:
-        scheduler.add_job(send_ping, CronTrigger(day_of_week='sat', hour=20, minute=0, timezone="Europe/Paris"))
-        scheduler.start()
-    except Exception as e:
-        print(f"Error setting up scheduler: {e}")
+    if not scheduler.get_job("weekly_ping"):
+        try:
+            scheduler.remove_all_jobs()
+            scheduler.add_job(send_ping, CronTrigger(day_of_week='sat', hour=20, minute=0, timezone="Europe/Paris")),id="weekly_ping"
+            scheduler.start()
+        except Exception as e:
+            print(f"Error setting up scheduler: {e}")
+    else:
+        print("Le job 'weekly_ping' est déjà programmé.")
 
 async def send_ping():
     """
