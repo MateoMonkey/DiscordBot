@@ -21,9 +21,18 @@ A Discord bot that pings a specific role every **Saturday at 8PM (Paris time)** 
 1. Push your code to GitHub
 2. Log on your sever (ssh)
 3. **Create** a docker image
-    - `docker build -t mateomonkey/discord_bot src/`
-    - `docker run -d --name discord-bot mateomonkey/discord_bot`
-    - `docker push mateomonkey/discord_bot`
+    - `docker build -t mateomonkey/discord_bot:latest src/`
+    - `docker login`
+    - `docker push mateomonkey/discord_bot:latest`\
+    If need to pull :
+    - `docker pull mateomonkey/discord_bot:latest`\
+    Restart the container :
+    - `docker stop discord-bot`
+    - `docker rm discord-bot`
+    - `docker rmi mateomonkey/discord_bot:latest python:3.12-slim`\
+    Run the bot :
+    - `docker run -d --name discord-bot mateomonkey/discord_bot:latest`
+    
 4. **Check** the docker image
     - `sudo docker ps -a`
     - `sudo docker image ls`
