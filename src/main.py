@@ -55,7 +55,7 @@ async def on_ready():
     if not scheduler.get_job("weekly_ping"):
         try:
             scheduler.remove_all_jobs()
-            scheduler.add_job(send_ping, CronTrigger(day_of_week='sat', hour=20, minute=0, timezone="Europe/Paris")),id="weekly_ping"
+            scheduler.add_job(send_ping, CronTrigger(day_of_week='sat', hour=20, minute=0, timezone="Europe/Paris")),id=="weekly_ping"
             scheduler.start()
         except Exception as e:
             print(f"Error setting up scheduler: {e}")
