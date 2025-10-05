@@ -8,6 +8,7 @@ services:
             - "25921:25921"
         networks:
             - src_net
+        restart: unless-stopped
 networks:
     src_net:
         driver: bridge
